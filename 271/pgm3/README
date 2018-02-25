@@ -1,0 +1,2 @@
+When running, file arguments must be in this order:
+./pgm3 Courses.dat Students.dat Transactions.dat

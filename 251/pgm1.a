@@ -1,0 +1,156 @@
+## Program 1	David Haltinner
+##
+## This program will Calculate the Discriminant of a quadratic equation
+##
+## Register usage
+## 	$t0	The number corresponding to A
+##	$t1	The number corresponding to B
+##	$t2	THe number corresponding to C
+##
+
+
+##################################################
+#                                                #
+#                  text segment                  #
+#                                                #
+##################################################
+
+        .text
+        .globl __start
+
+__start:
+
+#
+# cout<<Pinfo;
+#
+	la	$a0, Pinfo	# Load the Program Info
+	li	$v0, 4		# print_string
+	syscall
+#
+# cout<<askA;
+#
+	la	$a0, askA	# Load the question String
+	li	$v0, 4		# print_string
+	syscall
+#
+# cin>>A;
+#
+	li	$v0, 5		# read_int
+	syscall
+	sw 	$v0, A		# Store number into A
+#
+# cout<<askB;
+#
+	la	$a0, askB	# Load the question String
+	li	$v0, 4		# print_string
+	syscall
+#
+# cin>>B;
+#
+	li	$v0, 5		# read_int
+	syscall
+	sw $v0, B		# Store number into B
+#
+# cout<<askC;
+#
+	la	$a0, askC	# Load the question String
+	li	$v0, 4		# print_string
+	syscall
+#
+# cin>>C;
+#
+	li	$v0, 5		# read_int
+	syscall
+	sw 	$v0, C		# Store number into C
+#
+# b=b*b
+#
+	lw 	$t0, B		# load B
+	mul 	$t0, $t0, $t0	# multiply B by itself
+#
+# 4*a
+#
+	lw 	$t1, A		# load A
+	mul 	$t1, $t1, 4	# multiply A by 4
+#
+# 4*a*c
+#
+	lw 	$t2, C		# load C
+	mul	$t2, $t1, $t2	# multiply previous answer by C
+#
+# b*b-4ac
+#
+	sub	$t0, $t0, $t2	# subtract my two answers
+#
+# cout<<endl;
+#
+	li	$v0, 4		# print_string
+	la	$a0, endl	# Load the new line
+	syscall
+#
+# cout<<ansA<<A;
+#
+	li	$v0, 4		# print_string
+	la	$a0, ansA	# Load answer string for A
+	syscall
+	li	$v0, 1		# print_int
+	lw	$a0, A		# load the number A
+	syscall
+#
+# cout<<ansB<<B;
+#
+	li	$v0, 4		# print_string
+	la	$a0, ansB	# Load answer string for B
+	syscall
+	li	$v0, 1		# print_int
+	lw	$a0, B		# load the number B
+	syscall
+#
+# cout<<ansC<<C;
+#
+	li	$v0, 4		# print_string
+	la	$a0, ansC	# Load answer string for C
+	syscall
+	li	$v0, 1		# print_int
+	lw	$a0, C		# load the number C
+	syscall
+#
+# cout<<ansD<<D
+#
+	li	$v0, 4		# print_string
+	la	$a0, ansD	# Load answer string for D, final answer
+	syscall
+	li	$v0, 1		# print_int
+	move	$a0, $t0	# move the answer into the correct regsiter
+	syscall
+#
+# cout << endl;
+# exit();
+#
+	la	$a0, endl
+	li	$v0, 4          # code 4 = print_string
+	syscall                 # cout << endl;
+        li      $v0, 10         # code 10 = exit
+        syscall                 # halt program
+
+
+##################################################
+#                                                #
+#                  data segment                  #
+#                                                #
+##################################################
+
+        .data
+	.align 	2
+A:	.space	4				# The number A
+B:	.space 	4				# The number B
+C:	.space	4				# The number C
+askA:	.asciiz	"a? "				# Prompt for A
+askB:	.asciiz	"b? "				# Prompt for B
+askC:	.asciiz	"c? "				# Prompt for C
+Pinfo:	.asciiz "Program 1: David Haltinner\n"	# Program/Name Info
+ansA:	.asciiz	"a = "				# Answer Response for A
+ansB:	.asciiz ", b = "			# Answer Response for B
+ansC:	.asciiz ", c = "			# Answer Response for C
+ansD:	.asciiz	", d = "			# Answer Response for D
+endl:   .asciiz  "\n"          			# newline

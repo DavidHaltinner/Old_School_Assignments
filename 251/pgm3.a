@@ -1,0 +1,163 @@
+## Program 3  David Haltinner
+##
+## This program will read in a specified number of integers, and store them 
+## into an array. It will then compute the average and the sum of the 
+## inputted numbers.
+##
+## Register usage
+##		$t0	used as a counter to go from n to 0
+##		$t1	used as a pointer to array
+##		$t2	used to hold the sum, and the average
+##		$t3	temporarily copies data from the array ($t1)
+
+
+##################################################
+#                                                #
+#                  text segment                  #
+#                                                #
+##################################################
+
+        .text
+        .globl __start
+__start:
+
+# cout<<info;
+	la	$a0, info	# Load info
+	li	$v0, 4
+	syscall			# Display on screen
+# cout<<prompt;
+	la	$a0, prompt
+	li	$v0, 4
+	syscall			# Display prompt
+# cin>>n;
+	li	$v0, 5		# Get an int
+	syscall
+	sw	$v0, n		# Place input into N
+# if (n<1) goto end;
+	blt	$v0, 1, end
+# if (n>20) goto end;
+	bgt	$v0, 20, end
+# $t0=n;
+# for (int i=0; i<n; i++)
+#   cout<<ques;
+#   cin>>array[i];
+	lw	$t0, n		# $t0=n
+	la	$t1, array	# $t1 is start of array
+top:	beqz	$t0, bottom	# $t0==0? then jump to the bottom
+	la	$a0, quest
+	li	$v0, 4
+	syscall			# Display quest prompt
+	li	$v0, 5		# Get an int
+	syscall
+	sw	$v0, ($t1)	# save the int into memory
+	addi	$t1, 4		# next slot in array
+	sub	$t0, 1		# one less number to get
+	j 	top		# go get a new number
+bottom:
+# $t2=0;
+# for (int i=0; i<n; i++)
+#   $t2=$t2+array[i];
+# cout<<sum<<$t2
+	li	$t2, 0		# set $t2 back to 0
+	lw	$t0, n		# set $t0, back to n
+	la	$t1, array	# start at the beginning of array
+sumtop:	beqz	$t0, sumbot	# $t0==0? then jump to bottom of loop
+	lw	$t3, ($t1)	# load the first array element
+	add	$t2, $t2, $t3	# add the element to the total
+	addi	$t1, 4		# next element
+	sub	$t0, 1		# one less element
+	j 	sumtop		# go back to the top
+sumbot:	la	$a0, sum	# Display the sum prompt
+	li	$v0, 4
+	syscall
+	move	$a0, $t2	# Display the actual sum
+	li	$v0, 1
+	syscall
+# cout<<endl;
+	la	$a0, endl	# Display new line feed
+	li	$v0, 4
+	syscall
+# $t0=n;
+# $t2=$t2/n;
+# cout<<avg<<$t2;
+	lw	$t0, n		# set $t0 to the size
+	div	$t2, $t2, $t0	# find the average
+	la	$a0, avg	# Display the avg prompt
+	li	$v0, 4
+	syscall
+	move	$a0, $t2	# Display the answer
+	li	$v0, 1
+	syscall
+# cout<<endl
+	la	$a0, endl
+	li	$v0, 4
+	syscall
+# for (int i=0; i<n; i++)
+#   cout<<array[i];
+#   if (avg<array[i])
+#     for (int x=0; x<array[i]-avg; x++)
+#       cout<<"+";
+#   else
+#     for (int x=0; x<avg-array[i]; x++)
+#       cout<<"-";
+	lw	$t0, n		# Set counter to n
+	la	$t1, array	# Start at the front of the array
+topmp:	beqz	$t0, end	# if the counter runs out, i'm done
+	lw	$a0, ($t1)	# display the number i'm on
+	li	$v0, 1
+	syscall
+	lw	$t3, ($t1)
+	blt	$t3, $t2, else	# if the avg is less then the element
+	sub	$t4, $t3, $t2	# subtract the avg from the array element
+thentp:	beqz	$t4, botmp	# while my new counter is not empty
+	la	$a0, plus	# print a +
+	li	$v0, 4		
+	syscall
+	sub	$t4, 1		# one less on the number of pluses
+	j 	thentp		# go back to the top of the loop
+else:	sub	$t4, $t2, $t3	# subtract the elemet from the sum
+topels:	beqz	$t4, botmp	# if my new counter is empty, im done
+	la	$a0, minus	# print a -
+	li	$v0, 4
+	syscall
+	sub	$t4, 1		# one less on the counter
+	j	topels		# back to the loop
+botmp:	addi	$t1, 4		# next array element
+	sub	$t0, 1		# one less pass
+	la	$a0, endl	# print a new line
+	li	$v0, 4
+	syscall
+	j	topmp		# to the top of the main loop
+end:
+
+#
+# cout << endl;
+# exit();
+#
+	la	$a0, endl
+	li	$v0, 4          # code 4 = print_string
+	syscall                 # cout << endl;
+
+        li      $v0, 10         # code 10 = exit
+        syscall                 # halt program
+
+
+##################################################
+#                                                #
+#                  data segment                  #
+#                                                #
+##################################################
+
+        .data
+
+endl:   .asciiz	"\n"     			# newline
+info:	.asciiz	"Program 3: David Haltinner\n"	# Info about this program
+prompt:	.asciiz	"n? "				# Prompt the size of the array
+quest:	.asciiz	"? "				# Prompt for next integer
+sum:	.asciiz	"sum = "			# Displaying the sum
+avg:	.asciiz	"avg = "			# Displaying the average
+	.align	2				# need a word boundry
+n:	.space	4				# Size of the array
+array:	.space	80				# Can hold up to 20 numbers
+plus:	.asciiz	"+"				# the plus sign
+minus:	.asciiz	"-"				# the minus sign

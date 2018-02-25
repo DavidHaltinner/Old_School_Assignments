@@ -1,0 +1,820 @@
+
+state 0:
+
+	Program : . LambdaExp EOF 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	Program	goto 68
+	LambdaExp	goto 1
+
+	.	error
+
+
+state 1:
+
+	Program : LambdaExp . EOF 
+
+	EOF	shift 6
+
+
+	.	error
+
+
+state 2:
+
+	LambdaExp : LAMBDA . VAR DOT LambdaExp 
+
+	VAR	shift 7
+
+
+	.	error
+
+
+state 3:
+
+	LambdaExp : LPAREN . LambdaExp LambdaExp RPAREN 
+	LambdaExp : LPAREN . PLUS LambdaExp LambdaExp RPAREN 
+	LambdaExp : LPAREN . MULT LambdaExp LambdaExp RPAREN 
+	LambdaExp : LPAREN . MINUS LambdaExp LambdaExp RPAREN 
+	LambdaExp : LPAREN . DIVIDE LambdaExp LambdaExp RPAREN 
+	LambdaExp : LPAREN . MOD LambdaExp LambdaExp RPAREN 
+	LambdaExp : LPAREN . IF LambdaExp LambdaExp LambdaExp RPAREN 
+	LambdaExp : LPAREN . LT LambdaExp LambdaExp RPAREN 
+	LambdaExp : LPAREN . GT LambdaExp LambdaExp RPAREN 
+	LambdaExp : LPAREN . EQ LambdaExp LambdaExp RPAREN 
+	LambdaExp : LPAREN . AND LambdaExp LambdaExp RPAREN 
+	LambdaExp : LPAREN . OR LambdaExp LambdaExp RPAREN 
+	LambdaExp : LPAREN . NOT LambdaExp RPAREN 
+	LambdaExp : LPAREN . LET VAR BE LambdaExp IN LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+	PLUS	shift 21
+	MULT	shift 20
+	MINUS	shift 19
+	DIVIDE	shift 18
+	MOD	shift 17
+	IF	shift 16
+	LT	shift 15
+	GT	shift 14
+	EQ	shift 13
+	AND	shift 12
+	OR	shift 11
+	NOT	shift 10
+	LET	shift 9
+
+	LambdaExp	goto 8
+
+	.	error
+
+
+state 4:
+
+	LambdaExp : INT .  (reduce by rule 2)
+
+
+
+	.	reduce by rule 2
+
+
+state 5:
+
+	LambdaExp : VAR .  (reduce by rule 1)
+
+
+
+	.	reduce by rule 1
+
+
+state 6:
+
+	Program : LambdaExp EOF .  (reduce by rule 0)
+
+
+
+	.	reduce by rule 0
+
+
+state 7:
+
+	LambdaExp : LAMBDA VAR . DOT LambdaExp 
+
+	DOT	shift 22
+
+
+	.	error
+
+
+state 8:
+
+	LambdaExp : LPAREN LambdaExp . LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 23
+
+	.	error
+
+
+state 9:
+
+	LambdaExp : LPAREN LET . VAR BE LambdaExp IN LambdaExp RPAREN 
+
+	VAR	shift 24
+
+
+	.	error
+
+
+state 10:
+
+	LambdaExp : LPAREN NOT . LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 25
+
+	.	error
+
+
+state 11:
+
+	LambdaExp : LPAREN OR . LambdaExp LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 26
+
+	.	error
+
+
+state 12:
+
+	LambdaExp : LPAREN AND . LambdaExp LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 27
+
+	.	error
+
+
+state 13:
+
+	LambdaExp : LPAREN EQ . LambdaExp LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 28
+
+	.	error
+
+
+state 14:
+
+	LambdaExp : LPAREN GT . LambdaExp LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 29
+
+	.	error
+
+
+state 15:
+
+	LambdaExp : LPAREN LT . LambdaExp LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 30
+
+	.	error
+
+
+state 16:
+
+	LambdaExp : LPAREN IF . LambdaExp LambdaExp LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 31
+
+	.	error
+
+
+state 17:
+
+	LambdaExp : LPAREN MOD . LambdaExp LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 32
+
+	.	error
+
+
+state 18:
+
+	LambdaExp : LPAREN DIVIDE . LambdaExp LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 33
+
+	.	error
+
+
+state 19:
+
+	LambdaExp : LPAREN MINUS . LambdaExp LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 34
+
+	.	error
+
+
+state 20:
+
+	LambdaExp : LPAREN MULT . LambdaExp LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 35
+
+	.	error
+
+
+state 21:
+
+	LambdaExp : LPAREN PLUS . LambdaExp LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 36
+
+	.	error
+
+
+state 22:
+
+	LambdaExp : LAMBDA VAR DOT . LambdaExp 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 37
+
+	.	error
+
+
+state 23:
+
+	LambdaExp : LPAREN LambdaExp LambdaExp . RPAREN 
+
+	RPAREN	shift 38
+
+
+	.	error
+
+
+state 24:
+
+	LambdaExp : LPAREN LET VAR . BE LambdaExp IN LambdaExp RPAREN 
+
+	BE	shift 39
+
+
+	.	error
+
+
+state 25:
+
+	LambdaExp : LPAREN NOT LambdaExp . RPAREN 
+
+	RPAREN	shift 40
+
+
+	.	error
+
+
+state 26:
+
+	LambdaExp : LPAREN OR LambdaExp . LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 41
+
+	.	error
+
+
+state 27:
+
+	LambdaExp : LPAREN AND LambdaExp . LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 42
+
+	.	error
+
+
+state 28:
+
+	LambdaExp : LPAREN EQ LambdaExp . LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 43
+
+	.	error
+
+
+state 29:
+
+	LambdaExp : LPAREN GT LambdaExp . LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 44
+
+	.	error
+
+
+state 30:
+
+	LambdaExp : LPAREN LT LambdaExp . LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 45
+
+	.	error
+
+
+state 31:
+
+	LambdaExp : LPAREN IF LambdaExp . LambdaExp LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 46
+
+	.	error
+
+
+state 32:
+
+	LambdaExp : LPAREN MOD LambdaExp . LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 47
+
+	.	error
+
+
+state 33:
+
+	LambdaExp : LPAREN DIVIDE LambdaExp . LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 48
+
+	.	error
+
+
+state 34:
+
+	LambdaExp : LPAREN MINUS LambdaExp . LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 49
+
+	.	error
+
+
+state 35:
+
+	LambdaExp : LPAREN MULT LambdaExp . LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 50
+
+	.	error
+
+
+state 36:
+
+	LambdaExp : LPAREN PLUS LambdaExp . LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 51
+
+	.	error
+
+
+state 37:
+
+	LambdaExp : LAMBDA VAR DOT LambdaExp .  (reduce by rule 3)
+
+
+
+	.	reduce by rule 3
+
+
+state 38:
+
+	LambdaExp : LPAREN LambdaExp LambdaExp RPAREN .  (reduce by rule 4)
+
+
+
+	.	reduce by rule 4
+
+
+state 39:
+
+	LambdaExp : LPAREN LET VAR BE . LambdaExp IN LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 52
+
+	.	error
+
+
+state 40:
+
+	LambdaExp : LPAREN NOT LambdaExp RPAREN .  (reduce by rule 16)
+
+
+
+	.	reduce by rule 16
+
+
+state 41:
+
+	LambdaExp : LPAREN OR LambdaExp LambdaExp . RPAREN 
+
+	RPAREN	shift 53
+
+
+	.	error
+
+
+state 42:
+
+	LambdaExp : LPAREN AND LambdaExp LambdaExp . RPAREN 
+
+	RPAREN	shift 54
+
+
+	.	error
+
+
+state 43:
+
+	LambdaExp : LPAREN EQ LambdaExp LambdaExp . RPAREN 
+
+	RPAREN	shift 55
+
+
+	.	error
+
+
+state 44:
+
+	LambdaExp : LPAREN GT LambdaExp LambdaExp . RPAREN 
+
+	RPAREN	shift 56
+
+
+	.	error
+
+
+state 45:
+
+	LambdaExp : LPAREN LT LambdaExp LambdaExp . RPAREN 
+
+	RPAREN	shift 57
+
+
+	.	error
+
+
+state 46:
+
+	LambdaExp : LPAREN IF LambdaExp LambdaExp . LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 58
+
+	.	error
+
+
+state 47:
+
+	LambdaExp : LPAREN MOD LambdaExp LambdaExp . RPAREN 
+
+	RPAREN	shift 59
+
+
+	.	error
+
+
+state 48:
+
+	LambdaExp : LPAREN DIVIDE LambdaExp LambdaExp . RPAREN 
+
+	RPAREN	shift 60
+
+
+	.	error
+
+
+state 49:
+
+	LambdaExp : LPAREN MINUS LambdaExp LambdaExp . RPAREN 
+
+	RPAREN	shift 61
+
+
+	.	error
+
+
+state 50:
+
+	LambdaExp : LPAREN MULT LambdaExp LambdaExp . RPAREN 
+
+	RPAREN	shift 62
+
+
+	.	error
+
+
+state 51:
+
+	LambdaExp : LPAREN PLUS LambdaExp LambdaExp . RPAREN 
+
+	RPAREN	shift 63
+
+
+	.	error
+
+
+state 52:
+
+	LambdaExp : LPAREN LET VAR BE LambdaExp . IN LambdaExp RPAREN 
+
+	IN	shift 64
+
+
+	.	error
+
+
+state 53:
+
+	LambdaExp : LPAREN OR LambdaExp LambdaExp RPAREN .  (reduce by rule 15)
+
+
+
+	.	reduce by rule 15
+
+
+state 54:
+
+	LambdaExp : LPAREN AND LambdaExp LambdaExp RPAREN .  (reduce by rule 14)
+
+
+
+	.	reduce by rule 14
+
+
+state 55:
+
+	LambdaExp : LPAREN EQ LambdaExp LambdaExp RPAREN .  (reduce by rule 13)
+
+
+
+	.	reduce by rule 13
+
+
+state 56:
+
+	LambdaExp : LPAREN GT LambdaExp LambdaExp RPAREN .  (reduce by rule 12)
+
+
+
+	.	reduce by rule 12
+
+
+state 57:
+
+	LambdaExp : LPAREN LT LambdaExp LambdaExp RPAREN .  (reduce by rule 11)
+
+
+
+	.	reduce by rule 11
+
+
+state 58:
+
+	LambdaExp : LPAREN IF LambdaExp LambdaExp LambdaExp . RPAREN 
+
+	RPAREN	shift 65
+
+
+	.	error
+
+
+state 59:
+
+	LambdaExp : LPAREN MOD LambdaExp LambdaExp RPAREN .  (reduce by rule 9)
+
+
+
+	.	reduce by rule 9
+
+
+state 60:
+
+	LambdaExp : LPAREN DIVIDE LambdaExp LambdaExp RPAREN .  (reduce by rule 8)
+
+
+
+	.	reduce by rule 8
+
+
+state 61:
+
+	LambdaExp : LPAREN MINUS LambdaExp LambdaExp RPAREN .  (reduce by rule 7)
+
+
+
+	.	reduce by rule 7
+
+
+state 62:
+
+	LambdaExp : LPAREN MULT LambdaExp LambdaExp RPAREN .  (reduce by rule 6)
+
+
+
+	.	reduce by rule 6
+
+
+state 63:
+
+	LambdaExp : LPAREN PLUS LambdaExp LambdaExp RPAREN .  (reduce by rule 5)
+
+
+
+	.	reduce by rule 5
+
+
+state 64:
+
+	LambdaExp : LPAREN LET VAR BE LambdaExp IN . LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 66
+
+	.	error
+
+
+state 65:
+
+	LambdaExp : LPAREN IF LambdaExp LambdaExp LambdaExp RPAREN .  (reduce by rule 10)
+
+
+
+	.	reduce by rule 10
+
+
+state 66:
+
+	LambdaExp : LPAREN LET VAR BE LambdaExp IN LambdaExp . RPAREN 
+
+	RPAREN	shift 67
+
+
+	.	error
+
+
+state 67:
+
+	LambdaExp : LPAREN LET VAR BE LambdaExp IN LambdaExp RPAREN .  (reduce by rule 17)
+
+
+
+	.	reduce by rule 17
+
+
+state 68:
+
+
+	EOF	accept
+
+
+	.	error
+
+42 of 223 action table entries left after compaction
+31 goto table entries

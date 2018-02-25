@@ -1,0 +1,6 @@
+	The quest for program efficiency need not and should not conflict with sound design and clear coding.  Creating efficient programs has little to do with program language tricks, but rather is based on good organization of information and good algoritms.  A programmer who has not mastered the basic principles of clear design will not likely write efficient programs.  On the other hand, clear programs require clear data organization and clear algorithms.
+	The second part of the text is concerned with the study of basic data structures
+used to implement abstract data types.   We note that programming in a language like C++ is
+very instructive.  Students learn stuff.  This is an important subject in the 
+major.  How many words are there in this file?
+

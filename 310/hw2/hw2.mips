@@ -1,0 +1,128 @@
+# David Haltinner
+# This code was actually generated from (a slightly modified) version
+# of my C++ code, using the compile written for the Compilers (431)
+# course. I only had to add code for the input, which is marked by two coments
+
+	.data
+.true:	.asciiz	"true"
+.false:	.asciiz	"false"
+.nl:	.asciiz	"\n"
+.getB:	.asciiz "Give me B: "
+	.text
+	.globl  main
+
+
+main:
+	#####
+	####### PROLOGUE #######
+	#####
+	subu	$sp, $sp, 100	# ra, fp & locals
+	sw	$ra, 96($sp)
+	sw	$fp, 92($sp)
+	addu	$fp, $sp, 96	# set new fp
+#assignment
+#Get B NEW CODE
+	la	$a0, .getB
+	li	$v0, 4
+	syscall
+	li 	$v0, 5
+	syscall	
+	move 	$t0, $v0
+# END NEW CODE
+	sw	$t0, -8($fp)
+#assignment
+	li	$t0, 0
+	sw	$t0, -92($fp)
+#while
+	j	.L0
+.L1:
+#assignment
+	lw	$t0, -92($fp)
+	li	$t1, 2
+	mulo	$t0, $t0, $t1
+	lw	$t1, -92($fp)
+	sll	$t1, $t1, 2
+	add	$t1, $fp, $t1
+	sw	$t0, -88($t1)
+#assignment
+	lw	$t0, -92($fp)
+	li	$t1, 1
+	add	$t0, $t0, $t1
+	sw	$t0, -92($fp)
+.L0:
+	lw	$t0, -92($fp)
+	li	$t1, 20
+	blt	$t0, $t1, .L1
+	j	.L2
+.L2:
+#assignment
+	li	$t0, 0
+	sw	$t0, -96($fp)
+#while
+	j	.L3
+.L4:
+#if
+	lw	$t0, -92($fp)
+	sll	$t0, $t0, 2
+	add	$t0, $fp, $t0
+	lw	$t0, -88($t0)
+	lw	$t1, -8($fp)
+	beq	$t0, $t1, .L6
+	j	.L7
+.L6:
+#then
+#assignment
+	lw	$t0, -96($fp)
+	li	$t1, 1
+	add	$t0, $t0, $t1
+	sw	$t0, -96($fp)
+	j	.L8
+.L7:
+#else
+.L8:
+#assignment
+	lw	$t0, -92($fp)
+	li	$t1, 1
+	add	$t0, $t0, $t1
+	sw	$t0, -92($fp)
+.L3:
+	lw	$t0, -92($fp)
+	li	$t1, 20
+	blt	$t0, $t1, .L4
+	j	.L5
+.L5:
+	lw	$t0, -8($fp)
+	move	$a0, $t0
+	li	$v0, 1
+	syscall			# print_int
+
+	.data
+.L9:	.asciiz	 " occurs "
+	.text
+
+	la	$a0, .L9
+	li	$v0, 4
+	syscall			# print_string
+	lw	$t0, -96($fp)
+	move	$a0, $t0
+	li	$v0, 1
+	syscall			# print_int
+
+	.data
+.L10:	.asciiz	 " times in A.\n"
+	.text
+
+	la	$a0, .L10
+	li	$v0, 4
+	syscall			# print_string
+
+main..:
+	#####
+	####### EPILOGUE #######
+	#####
+	lw	$ra, 0($fp)	# restore ra
+	lw	$fp, -4($fp)	# restore fp
+	addu	$sp, $sp, 100	# Pop
+
+	li	$v0, 10
+	syscall			# program exit

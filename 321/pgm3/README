@@ -1,0 +1,47 @@
+/home/perrie/321/public/Programs/pgm3/README
+
+Program 3 : B+tree
+                     What do you need to do?
+
+
+files: create.cc   insert.cc  payroll.cc  TREE.250
+       typedefs.h  random.h   btree.h     KEYS.250
+   (1) do nothing; do not alter these files
+
+
+file btree.cc
+   (1) function Find
+   (2) function Insert
+   (3) function Sequential
+   remember: there is no data[i] field for the B+tree
+
+
+file bt.cc
+   (1) function btreeInsert
+
+
+file disk.cc
+   (1) printIndexFilePage0()
+   (2) printDataFilePage0 ()
+
+
+file Makefile
+   (1) put "your" name(s) after "Written by: " at target test
+
+
+
+                 What do you use that I have given you?
+
+(1) treeprint
+    executable file treeprint will create a level-order traversal
+    of the Index File (Index Set & Sequence Set)  (see the Makefile)
+    usage:  treeprint btree.bin
+
+
+(2) bt.obj
+    object file bt.obj is the compiled version of the private member
+    function btreeInsert.  btreeInsert performs a btree insert,
+    which is what you need to do in the Index Set of the B+tree.
+
+(3) Go
+    A Shell script for testing, e.g.  Go 1

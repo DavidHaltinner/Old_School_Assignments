@@ -1,0 +1,177 @@
+## Program 2	David Haltinner
+##
+## This program will draw a a shape made out of *s in the shape of a 
+## triangle with 2 legs. It will have the number of rows the user specifies.
+##
+## Register usage
+## 	$t0	The number of spaces to diaplay.
+##	$t1	The number of stars to display, 
+##	$t2	Temporary arithmatic
+##	$t3	Counter to loop through the number of lines needed
+##	$t4	Counter for the number of legs (2)
+##
+
+##################################################
+#                                                #
+#                  text segment                  #
+#                                                #
+##################################################
+
+        .text
+        .globl __start
+__start:
+
+#
+# cout<<intro;
+#
+	la	$a0, intro	
+	li	$v0, 4
+	syscall			# print intro
+#
+# cout<<prompt;
+#
+	la	$a0, prompt	
+	li	$v0, 4
+	syscall			# print prompt
+#
+# cin>>N;
+#
+	li	$v0, 5		
+	syscall			# read in N
+	sw	$v0, N		
+#
+# if (N<2 || N>25) goto exit;
+#
+	blt 	$v0, 2, exit	# N<2
+	bgt	$v0, 25, exit	# N>25
+#
+# cout<<endl;
+#
+	la	$a0, endl	
+	li	$v0, 4
+	syscall			# print new line
+#
+# Line of spaces/stars
+#
+	lw	$t3, N		# $t3=N;
+top:	
+#
+# How many stars?
+#
+	li	$t1, 0		# $t1=0;
+#
+# How many spaces?
+#
+	li	$t0, 1		# $t0=1;
+#
+# Dont add last space if on last line
+#
+	beq	$t3, 1, stars	# if ($t3<1) goto stars;
+#
+# Print spaces
+# cout<<"     ";
+#
+spaces:	la	$a0, space	
+	li	$v0, 4
+	syscall			# print a space
+#
+# $t0-1
+#
+	add 	$t0, 1		# $t0++
+	bne	$t3, $t0,spaces	# if ($t3!=$t0) goto spaces;
+#
+# Print stars
+# cout<<"****";
+#
+stars:	la	$a0, star
+	li	$v0, 4
+	syscall			# print a star
+#
+# $t1+1
+#
+	add	$t1, 1		# $t1++;
+	lw	$t2, N		# $t2=N;
+	add	$t2, 1		# $t2++;
+	sub	$t2, $t2, $t3	# $t2=$t2-$t3;
+	blt	$t1, $t2, stars	# if ($t1<$t2) goto stars;
+
+#
+# cout<<endl;
+#
+	la	$a0, endl
+	li	$v0, 4
+	syscall			# print a new line
+#
+# Next line
+#
+	sub	$t3, 1		# $t3--;
+	bnez	$t3, top	# if ($t3!=0) goto top;
+#
+# Legs
+#
+	li	$t4, 2		# $t4=2;
+#
+# Print star
+#
+leg:	la	$a0, star	
+	li	$v0, 4	
+	syscall			# print a star
+#
+# How many spaces between stars?
+#
+	lw	$t0, N		# $t0=N;
+	ble	$t0, 2, nextsr	# if ($t0<2) goto next;
+	sub	$t0, 2		# $t0=$t0-2;
+#
+# Print the spaces
+#	
+nextsp:	la	$a0, space
+	li	$v0, 4
+	syscall			# print a space
+	sub	$t0, 1		# $t0=$t0-1;
+	bnez	$t0, nextsp	# if ($t0!=0) goto next space;
+#
+# cout<<star;
+#	
+nextsr:	la	$a0, star
+	li	$v0, 4		
+	syscall			# print a star
+#
+# cout<<endl;
+#
+	la	$a0, endl
+	li	$v0, 4		
+	syscall			# print a new line
+#
+# Print two lines for the legs...
+#
+	sub	$t4, 1		# $t4--;
+	bnez	$t4, leg	# if ($t4!=0) goto leg;
+
+exit:
+#
+# cout << endl;
+# exit();
+#
+	la	$a0, endl
+	li	$v0, 4        
+	syscall                 # cout << endl;
+
+        li      $v0, 10         # code 10 = exit
+        syscall                 # halt program
+
+
+##################################################
+#                                                #
+#                  data segment                  #
+#                                                #
+##################################################
+
+        .data
+
+N:	.space	4				# The number of rows
+endl:   .asciiz	"\n"           			# newline
+prompt:	.asciiz	"Number of Lines? "		# The prompt for N
+star:	.asciiz	"*"				# The star symbol
+space:	.asciiz	" "				# the space symbol
+intro:	.asciiz	"Program 2: David Haltinner\n"	# Program info and my name

@@ -1,0 +1,330 @@
+
+state 0:
+
+	Program : . LambdaExp EOF 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	Program	goto 28
+	LambdaExp	goto 1
+
+	.	error
+
+
+state 1:
+
+	Program : LambdaExp . EOF 
+
+	EOF	shift 6
+
+
+	.	error
+
+
+state 2:
+
+	LambdaExp : LAMBDA . VAR DOT LambdaExp 
+
+	VAR	shift 7
+
+
+	.	error
+
+
+state 3:
+
+	LambdaExp : LPAREN . LambdaExp LambdaExp RPAREN 
+	LambdaExp : LPAREN . PLUS LambdaExp LambdaExp RPAREN 
+	LambdaExp : LPAREN . MULT LambdaExp LambdaExp RPAREN 
+	LambdaExp : LPAREN . LETREC VAR BE LambdaExp IN LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+	PLUS	shift 11
+	MULT	shift 10
+	LETREC	shift 9
+
+	LambdaExp	goto 8
+
+	.	error
+
+
+state 4:
+
+	LambdaExp : INT .  (reduce by rule 2)
+
+
+
+	.	reduce by rule 2
+
+
+state 5:
+
+	LambdaExp : VAR .  (reduce by rule 1)
+
+
+
+	.	reduce by rule 1
+
+
+state 6:
+
+	Program : LambdaExp EOF .  (reduce by rule 0)
+
+
+
+	.	reduce by rule 0
+
+
+state 7:
+
+	LambdaExp : LAMBDA VAR . DOT LambdaExp 
+
+	DOT	shift 12
+
+
+	.	error
+
+
+state 8:
+
+	LambdaExp : LPAREN LambdaExp . LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 13
+
+	.	error
+
+
+state 9:
+
+	LambdaExp : LPAREN LETREC . VAR BE LambdaExp IN LambdaExp RPAREN 
+
+	VAR	shift 14
+
+
+	.	error
+
+
+state 10:
+
+	LambdaExp : LPAREN MULT . LambdaExp LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 15
+
+	.	error
+
+
+state 11:
+
+	LambdaExp : LPAREN PLUS . LambdaExp LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 16
+
+	.	error
+
+
+state 12:
+
+	LambdaExp : LAMBDA VAR DOT . LambdaExp 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 17
+
+	.	error
+
+
+state 13:
+
+	LambdaExp : LPAREN LambdaExp LambdaExp . RPAREN 
+
+	RPAREN	shift 18
+
+
+	.	error
+
+
+state 14:
+
+	LambdaExp : LPAREN LETREC VAR . BE LambdaExp IN LambdaExp RPAREN 
+
+	BE	shift 19
+
+
+	.	error
+
+
+state 15:
+
+	LambdaExp : LPAREN MULT LambdaExp . LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 20
+
+	.	error
+
+
+state 16:
+
+	LambdaExp : LPAREN PLUS LambdaExp . LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 21
+
+	.	error
+
+
+state 17:
+
+	LambdaExp : LAMBDA VAR DOT LambdaExp .  (reduce by rule 3)
+
+
+
+	.	reduce by rule 3
+
+
+state 18:
+
+	LambdaExp : LPAREN LambdaExp LambdaExp RPAREN .  (reduce by rule 4)
+
+
+
+	.	reduce by rule 4
+
+
+state 19:
+
+	LambdaExp : LPAREN LETREC VAR BE . LambdaExp IN LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 22
+
+	.	error
+
+
+state 20:
+
+	LambdaExp : LPAREN MULT LambdaExp LambdaExp . RPAREN 
+
+	RPAREN	shift 23
+
+
+	.	error
+
+
+state 21:
+
+	LambdaExp : LPAREN PLUS LambdaExp LambdaExp . RPAREN 
+
+	RPAREN	shift 24
+
+
+	.	error
+
+
+state 22:
+
+	LambdaExp : LPAREN LETREC VAR BE LambdaExp . IN LambdaExp RPAREN 
+
+	IN	shift 25
+
+
+	.	error
+
+
+state 23:
+
+	LambdaExp : LPAREN MULT LambdaExp LambdaExp RPAREN .  (reduce by rule 6)
+
+
+
+	.	reduce by rule 6
+
+
+state 24:
+
+	LambdaExp : LPAREN PLUS LambdaExp LambdaExp RPAREN .  (reduce by rule 5)
+
+
+
+	.	reduce by rule 5
+
+
+state 25:
+
+	LambdaExp : LPAREN LETREC VAR BE LambdaExp IN . LambdaExp RPAREN 
+
+	VAR	shift 5
+	INT	shift 4
+	LPAREN	shift 3
+	LAMBDA	shift 2
+
+	LambdaExp	goto 26
+
+	.	error
+
+
+state 26:
+
+	LambdaExp : LPAREN LETREC VAR BE LambdaExp IN LambdaExp . RPAREN 
+
+	RPAREN	shift 27
+
+
+	.	error
+
+
+state 27:
+
+	LambdaExp : LPAREN LETREC VAR BE LambdaExp IN LambdaExp RPAREN .  (reduce by rule 7)
+
+
+
+	.	reduce by rule 7
+
+
+state 28:
+
+
+	EOF	accept
+
+
+	.	error
+
+22 of 83 action table entries left after compaction
+11 goto table entries

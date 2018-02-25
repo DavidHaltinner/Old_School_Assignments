@@ -1,0 +1,11 @@
+# Go
+# Unix script file for testing program 2
+
+echo "start testing"
+./create
+./insert
+./print  >print.i.txt
+./delete
+./print  >print.d.txt
+echo "finish testing"
+

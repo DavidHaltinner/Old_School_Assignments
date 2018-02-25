@@ -1,0 +1,12 @@
+	We study data structures so that we may learn to write more efficient programs. But
+ why must programs be efficient when new computers are faster every year?  This is not enough. 
+ The reason is that our ambitions grow with our capabilites. Instead of rendering 
+ efficiency needs obsolete, the modern revolution in computer power and storage capability
+ merely raises the efficiency stakes as we computerize more complex tasks.
+
+	A data structures course offers a good opportunity to introduce the concepts
+associated with object oriented programming.  C++ is a good language for this purpose.
+It is a major language gaining in popularity.  Second, the student gets to see concrete
+examples of object oriented programming in use.  Abstract data types are introduced in such a 
+course.  Efficient data structure implementations are also examined.  Students learn lots of 
+stuff in this course. Once mastered, C++ is a very powerful tool to generate generalized programs.

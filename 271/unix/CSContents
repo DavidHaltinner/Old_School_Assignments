@@ -1,0 +1,6 @@
+CircleSphere contents
+7:	double radius_of_both, area_of_circle, volume_of_sphere;
+8:	cout << "Enter a radius to use for both a circle"
+11:	area_of_circle=area(radius_of_both);
+14:	     << "Area of circle = " << area_of_circle << " square inches.\n"
+3:#include "CircleSphere.h"

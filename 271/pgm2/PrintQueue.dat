@@ -1,0 +1,52 @@
+R 120 H  10000  File_C_a_medium_size_file(report)
+R 125 H  15000  File_E_a_medium_size_file(text)
+R 130 H   5000  File_B_a_small_file(Source_program)
+R 135 L  20000  File_LA_large_file(dump)
+R 140 H  20000  File_EX_a_large_file(IBM_sales)
+R 145 H  20000  File_D_a_second_medium_size_file(budget)
+P 
+R 146 H  30000  File_X
+R 147 H  35000  File_Y
+R 148 H  40000  File_Z
+R 150 L  10000  File_LB_medium_file
+R 155 H   2000  File_AX_a_short_file(program_file)
+R 160 H  25000  File_F_big_file(sales_report)
+R 165 L   5000  File_LC_small_file
+R 168 H   8000  File_BB_medium_file(tests)
+K 140
+R 170 H   3000  File_A_a_short_file(program_listing)
+K 155
+P
+S 135
+P
+P
+R 175 L  10000  File_LD_medium
+P
+R 180 L  30000  File_LEX_long
+P
+P
+P
+S 175
+K 180
+S 175
+P
+S 175
+R 185 H  10000  File_H_new_medium_file(earnings_report)
+S 175
+P
+P
+P
+P
+P 
+P
+R 190 L  40000  File_LE_very_long
+R 192 L  10000  File_LF_med(test)
+R 195 H   5000  File_J_short(performance_data)
+R 200 H   2000  File_I_short(program_listing)
+P
+R 205 H   1000  File_W
+P
+P
+P
+P
+P

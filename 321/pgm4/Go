@@ -1,0 +1,8 @@
+
+# Go
+# usage:    Go 2
+
+cp    Records01.bin.Save  Records01.bin 
+./bman  Records01.bin       $1Test.t      $1Log.t
+mv    Records01.bin       After0$1.bin
+

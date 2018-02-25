@@ -1,0 +1,5 @@
+./create
+./insert  $1
+./payroll
+echo ""
+./treeprint  btree.bin

@@ -1,0 +1,2 @@
+Decl 8
+f%LambdaCalcLrValsFun.f-sqsToken.v$TOKEN.;-;;;sqsParserData.sqsHeader.sr;-;sLrTable.vToken.LrTable.;-;sToken.vToken.;-;lqovLrTable.;;;qrString.Array.Char.LrTable.;;lqovHeader.;;;qsMlyValue.srAbsyn.;-;rMlyValue.Absyn.;;sEC.sqovLrTable.;;lqovHeader.;;;qrMlyValue.;;;-;sActions.sqlqovHeader.;;;qrMlyValue.Absyn.LrTable.;;rMlyValue.;;-;;-;sTokens.srToken.ParserData.;+v$LambdaCalc_TOKENS.;;;+sqsParserData.v$PARSER_DATA.;-;sTokens.v$LambdaCalc_TOKENS.;-;;;

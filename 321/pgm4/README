@@ -1,0 +1,42 @@
+README
+
+1.  make only one change to main.cc
+    replace
+           logf << "Written by: Andrew Perrie" << endl << endl;
+    with
+           logf << "Written by:  your name(s)" << endl << endl;
+
+2.  You may not change the API described in bufferpool.h and pool.h
+
+3.  You must use private member functions isBuffered, writeToDisk
+       and moveToFront
+    You may delete private member function insertIntoBufferPool
+    You may add more private member functions
+
+4.  You may not use the number 16 anywhere in pool.cc
+    you may not use struct record anywhere in pool.cc
+
+5.  You must create a Makefile
+       use macros
+       you should use the macro    "OBJ = main.o pool.o showHex.obj"
+       main.o and pool.o need to be created
+       the link step needs showHex.obj
+       showHex.obj is precompiled; it is only linked
+       the executable must be named "bman"  (buffer manager)
+       create a target (clean) to delete all ".o" files
+       create a target (erase) to delete all ".o" files and bman
+
+6.  C++
+    Consider the following code:
+    char *s;
+    s = new char[80];
+    char *x;
+    x = s + 20;   // x is the "address" of s[20]
+    x[0] is s[20]
+
+7.  Suppose a logical record is 4 bytes
+    Suppose a frame holds 5 logical records; then frameSize = 20 bytes
+    Suppose you request the logical record at fileOffset 28
+    Then, you need to compute "baseOffset = 20;" and
+    do a "seekg(baseOffset);" to get the block of 5 records that
+    contains the requested record (the 8th record in the file)

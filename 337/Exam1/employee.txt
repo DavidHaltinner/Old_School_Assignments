@@ -1,0 +1,5 @@
+Mary	123-45-6789	secretary		111-22-3333	18.5
+John	987-65-4321	programmer	111-22-3333	5000	35.5
+Smith	111-22-3333	manager		333-33-1111	8000
+Adam	333-22-1111	executive		10000
+Helen	102-22-1001	programmer	111-22-3333	5500	42.5	

@@ -1,0 +1,185 @@
+## Program 6   David Haltinner
+##
+## This program will compute and print the square root of an 
+## input value using the secant method
+##
+## Register usage
+##	No $t or $s registers used
+##
+
+
+##################################################
+#                                                #
+#                  text segment                  #
+#                                                #
+##################################################
+
+        .text
+        .globl __start
+__start:
+
+	la	$a0, info
+	li	$v0, 4
+	syscall			# cout<<info;
+	la	$a0, getnum
+	li	$v0, 4
+	syscall			# cout<<getnum;
+	li	$v0, 7
+	syscall
+	la	$a0, endl
+	li	$v0, 4
+	syscall			# cin>>$f0;
+	
+	li.d	$f2, 0.0
+	c.le.d	$f0, $f2	# if $f0<0 goto end;
+	bc1t	end
+
+	s.d	$f0, d		# d=$f0;
+	mov.d	$f12, $f0	# $f12=$f0;
+	
+	jal	root		# root($f0)
+	
+	la	$a0, endl	
+	li	$v0, 4
+	syscall			# cout<<endl;
+	la	$a0, disp
+	li	$v0, 4
+	syscall			# cout<<disp;
+	l.d	$f12, d
+	li	$v0, 3
+	syscall			# cout<<d;
+	la	$a0, disp2
+	li	$v0, 4
+	syscall			# cout<<disp2;
+	mov.d	$f12, $f0
+	li	$v0, 3
+	syscall			# cout<<$f0;
+	
+	la	$a0, endl	
+	li	$v0, 4
+	syscall			# cout<<endl;
+	
+	lw	$a0, count
+	li	$v0, 1
+	syscall			# cout<<count;
+	la	$a0, iter
+	li	$v0, 4
+	syscall			# cout<<iter;
+
+	j	end		# return;	
+
+#=================================================
+# double root (double d);
+#
+# This will return the square root of the inputted number
+#
+# Register Usage: 
+#	$f16			Inputted Number
+#	$f4			Result carried to next loop/overall answer
+#	$f10			Error
+#	$f2,6,8,16,18,20,22	Temporary Values Only
+#=================================================
+
+root:	li	$v0, 3
+	syscall			# cout<<f12;
+	la	$a0, endl
+	li	$v0, 4
+	syscall			# cout<<endl;
+
+	mov.d	$f16, $f12	# $f16=$12; (f12 is argument reg, used later)
+#
+# $f2=d/2.0;
+# $f4=d/4.0;
+#
+	li.d	$f2, 2.0	# $f2=2.0;
+	li.d	$f4, 4.0	# $f4=4.0;
+	div.d	$f2, $f16, $f2	# $f2=$f16/2.0;
+	div.d	$f4, $f16, $f4	# $f4=$f16/4.0;
+#
+# do {
+#
+top:	lw	$t0, count	
+	addi	$t0, 1		# count++;
+	sw	$t0, count
+
+	mov.d	$f10, $f2	# $f10=$f2;
+	mov.d	$f2, $f4	# $f2=$f4;
+	mul.d	$f6, $f10, $f10	# $f6=$f10*$f10;
+	mul.d	$f8, $f2, $f2	# $f8=$f2*$f2;
+#
+# $f4=  ($f2*($f6-$f16)-$f10*($f8-$f16))/($f6-$f8)	
+#
+	sub.d	$f18, $f6, $f8	# $f18=$f6-$f8;
+	sub.d	$f20, $f8, $f16	# $f20=$f8-$f16;
+	mul.d	$f20, $f20, $f10 # $f20=$f20*$f10;	
+	sub.d	$f22, $f6, $f16	# $f22=$f6-$f16;
+	mul.d	$f22, $f22, $f2	# $f22=$f22*$f2
+	sub.d	$f20, $f22, $f20 # $f20=$f22-$f20;
+	div.d	$f4, $f20, $f18	# $f4=$f20/$f18;
+#
+# error=abs($f4-$f2)
+#
+	sub.d	$f10, $f4, $f2	# $f10=$f4-$f2; (error)	
+	li.d	$f8, 0.0	# $f8=0;
+	c.lt.d	$f10, $f8	# bool b=$f10<$f8
+	bc1f	nofix		# if !b then goto nofix
+	mov.d	$f8, $f10	# $f8=$f10;
+	li.d	$f6, -2.0	# $f6=-2;
+	mul.d	$f8, $f8, $f6	# $f8=$f8*-2;
+	sub.d	$f10, $f8, $f10	# $f10=$f8-$f10;
+	
+nofix:	mov.d	$f12, $f4		
+	li	$v0, 3
+	syscall			# cout<<$f4;
+	la	$a0, tab
+	li	$v0, 4
+	syscall			# cout<<"\t\t";
+	mov.d	$f12, $f10
+	li	$v0, 3
+	syscall			# cout<<$f10; (error)
+	la	$a0, endl
+	li	$v0, 4
+	syscall			# cout<<endl;
+
+	l.d	$f8, eps	# $f8=eps;
+	c.lt.d	$f10, $f8	# bool b=$f10<$f8;
+	bc1f	top		# if !b then goto top;
+#
+# while (eps < error)
+#
+	mov.d	$f0, $f4	# $f0=$f4;
+	jr	$ra		# return $f0;
+end:
+#
+# cout << endl;
+# exit();
+#
+	la	$a0, endl
+	li	$v0, 4          # code 4 = print_string
+	syscall                 # cout << endl;
+
+        li      $v0, 10         # code 10 = exit
+        syscall                 # halt program
+
+
+##################################################
+#                                                #
+#                  data segment                  #
+#                                                #
+##################################################
+
+        .data
+count:	.word	0				  # start count at 0
+	.align	3				  # a double boundary
+eps:	.double	0.000001			  # eps to compare wth error
+	.align 	3				  # at a double boundary
+d:	.space	8				  # save the input
+tab:	.asciiz	"\t\t"				  # tabs
+info:	.asciiz	"Program 6: David Haltinner\n\n"  # info about program
+getnum:	.asciiz	"? "				  # prompt for input number
+disp:	.asciiz	"sqrt("				  # nice display for answer
+disp2:	.asciiz	") = "				  # nice display for answer
+iter:	.asciiz	" iterations"			  # iteration output
+endl:   .asciiz  "\n"           		  # newline
+
+

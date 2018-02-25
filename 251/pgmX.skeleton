@@ -1,0 +1,39 @@
+## Program
+##
+## This program will
+##
+## Register usage
+##
+
+
+##################################################
+#                                                #
+#                  text segment                  #
+#                                                #
+##################################################
+
+        .text
+        .globl __start
+__start:
+
+#
+# cout << endl;
+# exit();
+#
+	la	$a0, endl
+	li	$v0, 4          # code 4 = print_string
+	syscall                 # cout << endl;
+
+        li      $v0, 10         # code 10 = exit
+        syscall                 # halt program
+
+
+##################################################
+#                                                #
+#                  data segment                  #
+#                                                #
+##################################################
+
+        .data
+
+endl:   .asciiz  "\n"           # newline

@@ -1,0 +1,126 @@
+## Program 4  David Haltinner
+##
+## This program will go through one generation of the 'Game of Life'
+## when given a starting nonary sequence (from decimal number)
+##
+## Register usage
+##	$t0	Will hold the inputted number
+##	$t1	Used as the array pointer when making ascii string
+##	$t2	Will hold the new generation in binary form
+##	$t3	Used to hold temporary bits when shiftng, etc
+##	$t4	Used as the loop counter
+##
+
+##################################################
+#                                                #
+#                  text segment                  #
+#                                                #
+##################################################
+
+        .text
+        .globl __start
+__start:
+
+# cout<<info
+	la	$a0, info	# Print the heading
+	li	$v0, 4
+	syscall	
+# cout<<prompt;
+	la	$a0, prompt	# Print the prompt
+	li	$v0, 4
+	syscall
+# cin>>$t0
+	li	$v0, 5		# Input an int
+	syscall
+	move	$t0, $v0
+# for (int $t4=0; i<32, $t4++)
+#    bin2st[32-$t4]=grabbit($t0, $t4)
+# cout<<bin2st;
+	li	$t4, 0		# start counter at 0
+	la	$t1, bin2st	# get the start of the bin2st array
+	addi	$t1, 31		# go to the end of the array
+prtop:	beq	$t4, 32, prend	# if i did it 32 times, goto prend
+	srl	$t2, $t0, $t4	# shift $t0's bits to the right $t4 bits
+	and	$t2, $t2, 0x1	# grab a single bit
+	addi	$t2, 48		# turn it into the ascii 0 or 1
+	sb	$t2, ($t1)	# store the ascii byte
+	addi	$t4, 1		# $t4++
+	sub	$t1, 1		# previous slot in the bit array
+	j	prtop		# go back to the top
+prend:	la	$a0, bin2st	
+	li	$v0, 4
+	syscall			# Display the new ascii converted binary number
+	la	$a0, endl
+	li	$v0, 4          
+	syscall  		# print a new line
+# binaryarray=binary[3];
+# for (int $t4=-1, $t4<32; $t4++)
+#    binaryarray=grablast3bits($t0)
+#    if (binaryarray=001||100|101|011|110) goto DTL
+	li	$t2, 0		# start the new bits at 0
+	li	$t4, -2		# counter
+TOP:	bge	$t4, 32, exit	# if i did it 32 times, quit
+	addi	$t4, 1		# increment the counter
+	bgtz	$t4, norm	# if it isnt the first time, go to norm
+	sll	$t1, $t0, 1	# first time, shift left 1
+	and	$t1, $t1, 0x7	# then grab the last 3 bits
+	bne	$t1, 4, TOP	# if it is not 110 then goto the top
+	li	$t3, 1		# load a single bit
+	or	$t2, $t2, $t3	# and drop it into the $t2 final bits
+norm:	srl	$t1, $t0, $t4	# Move 3 bits to the end
+	and	$t1, $t1, 0x7	# Remove all the other bits
+# if is dead with one+ neighbors
+	beq	$t1, 1, DTL	# 001
+	beq	$t1, 4, DTL	# 100
+	beq	$t1, 5, DTL	# 101
+	beq	$t1, 3, DTL	# 011 
+	beq	$t1, 6, DTL	# 110
+	j 	TOP		# if the bi will be 0, then dont change $t2
+#   binaryarray=010;
+#   binaryarray=binaryarray^$t4
+#   $t2=or($t2, $t3)
+DTL:	li	$t3, 2		# load bits 10
+	sll	$t3, $t3, $t4	# move those bits to where they will be going
+	or	$t2, $t2, $t3	# add them to the $t2 bit array
+	j 	TOP		# go back to the top of the loop
+# for (int $t4=0; i<32, $t4++)
+#    bin2st[32-$t4]=grabbit($t0, $t4)
+# cout<<bin2st;
+exit:	li	$t4, 0		# start counter at 0
+	la	$t1, bin2st	# get the start of the bin2st array
+	addi	$t1, 31		# go to the end of the array
+rtop:	beq	$t4, 32, rend	# if i did it 32 times, goto prend
+	srl	$t3, $t2, $t4	# shift $t0's bits to the right $t4 bits
+	and	$t3, $t3, 0x1	# grab a single bit
+	addi	$t3, 48		# turn it into the ascii 0 or 1
+	sb	$t3, ($t1)	# store the ascii byte
+	addi	$t4, 1		# $t4++
+	sub	$t1, 1		# previous slot in the bit array
+	j	rtop		# go back to the top
+rend:	la	$a0, bin2st	
+	li	$v0, 4
+	syscall			# Display the new ascii converted binary number
+end:
+#
+# cout << endl;
+# exit();
+#
+	la	$a0, endl
+	li	$v0, 4          # code 4 = print_string
+	syscall                 # cout << endl;
+        li      $v0, 10         # code 10 = exit
+        syscall                 # halt program
+
+
+##################################################
+#                                                #
+#                  data segment                  #
+#                                                #
+##################################################
+
+        .data
+
+endl:   .asciiz	"\n"           			# newline
+info:	.asciiz	"Program 4: David Haltinner\n"	# Info about the program
+prompt:	.asciiz	"n? "				# get the starting sequence
+bin2st:	.space	32				# to place the binary number in

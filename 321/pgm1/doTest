@@ -1,0 +1,21 @@
+# doTest
+
+# create old.bin and tran.txt
+        create
+
+# create new.bin
+        update  tran.txt
+
+# create old.txt
+        report old.bin  >old.txt
+
+# create new.txt
+        report new.bin  >new.txt
+
+# combine text files into one text file
+        echo ""             >> all.txt
+        echo "old.txt"      >> all.txt
+        cat  old.txt        >> all.txt
+        echo ""             >> all.txt
+        echo "new.txt"      >> all.txt
+        cat  new.txt        >> all.txt

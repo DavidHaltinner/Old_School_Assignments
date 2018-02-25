@@ -1,0 +1,51 @@
+
+(*  fun mkprint (expr,pos)  = A.PrintS(expr,pos) *)
+(*  fun mkassign name value pos= A.AssignS(name,value,pos) *)
+(*  fun mkadd(e1,e2,pos) = A.AddE(e1,e2,pos) *)
+(*  fun mkfloat value = A.FloatE(value) *)
+(*  fun mkref (id, pos) = (Absyn.make_id(id, pos)) *)
+
+%%
+
+%name LambdaCalc 
+%term  VAR of string
+  | INT of int
+  | DOT  
+  | LPAREN  
+  | RPAREN  
+  | LAMBDA
+  | PLUS  
+  | MULT
+  | LETREC
+  | BE
+  | IN
+  | EOF
+
+%nonterm    Program             of Absyn.LambdaExp
+            | LambdaExp 	of Absyn.LambdaExp
+
+%eop EOF
+
+%start Program
+%pos int
+%pure
+%verbose
+
+(* %keyword LAMBDA *)
+
+(*  %value NAME ("bogus") *)
+(*  %value FLOAT (1.0) *)
+
+%%
+
+Program       : LambdaExp EOF                           (LambdaExp)
+LambdaExp     : VAR                                     (Absyn.Var(VAR))
+              | INT                                     (Absyn.Con(Absyn.Num(INT)))
+              | LAMBDA VAR DOT LambdaExp                (Absyn.Abs(VAR, LambdaExp))
+              | LPAREN LambdaExp LambdaExp RPAREN       (Absyn.App(LambdaExp1, LambdaExp2))
+              | LPAREN PLUS LambdaExp LambdaExp RPAREN  (Absyn.App(Absyn.App(Absyn.Con(Absyn.Op2("+",(op +))),LambdaExp1),LambdaExp2))
+              | LPAREN MULT LambdaExp LambdaExp RPAREN  (Absyn.App(Absyn.App(Absyn.Con(Absyn.Op2("*",(op * ))),LambdaExp1),LambdaExp2))
+	      | LPAREN LETREC VAR BE LambdaExp IN LambdaExp RPAREN (Absyn.App(Absyn.Abs(VAR, LambdaExp2), LambdaExp1))	     
+(*
+ | LPAREN LETREC VAR BE LAMBDA VAR DOT LambdaExp IN RPAREN LambdaExp LambdaExp RPAREN  (Absyn.App(Absyn.Abs(VAR, LamdaExp     (Absyn.App(LambdaExp2, LambdaExp3))
+*)

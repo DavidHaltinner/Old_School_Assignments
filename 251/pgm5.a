@@ -1,0 +1,349 @@
+## Program 5  by David Haltinner
+##
+## This program will calculate the cross prioduct 
+## and the dot product of two vectors
+##
+## Register usage
+##	No $t or $s registers used in main
+
+
+##################################################
+#                                                #
+#                  text segment                  #
+#                                                #
+##################################################
+
+        .text
+        .globl __start
+__start:
+
+# cout<<info<<endl;
+# readData('a', A);
+# readData('b', B);
+# dot(&d, A, B);
+# cross(N, A, B);
+# PrintData(d, N, A, B);
+
+	la	$a0, info
+	li	$v0, 4
+	syscall			# Print program info
+	la	$a0, endl
+	syscall			# new line
+
+	li	$a0, 'a'	# start with array A
+	la	$a1, A		
+	jal	rdData		# get data
+	li	$a0, 'b'	# now do array B
+	la	$a1, B
+	jal	rdData		# get data
+
+	la	$a0, d		# here is where to place the dot
+	la	$a1, A		# give it A
+	la	$a2, B		# give it B
+	jal	dot		# get the dot product in d
+				# dot(&d, A, B)
+	la	$a0, N		# give it N
+	la	$a1, A		# give it A
+	la	$a2, B		# give it B
+	jal	cross		# get the cross product in N
+				# cross(N, A, B)
+	la	$a0, d		# give it d
+	la	$a1, N		# give it N
+	la	$a2, A		# give it A
+	la	$a3, B		# give it B
+	jal	PrntDt		# print the stuff on screen
+	j	end		# we're done!
+
+#=================================================
+# void cross(int N[], int A[], int B[])
+#
+# no return value. Results placed in array N
+#
+# register usage
+#	$s0	points to the A array (par=$a1)
+#	$s1	points to the B array (par=$a2)
+#	$s2	points to the N array (par=$a0)
+#=================================================
+
+cross:	sub	$sp, $sp, 16	# prepare the stack for data
+	sw	$ra, ($sp)	# save the return address
+	sw	$s0, 4($sp)	# save the old $s0
+	sw	$s1, 8($sp)	# save the old $s1
+	sw	$s2, 12($sp)	# save the old $s2
+
+	move	$s0, $a1	# put $a1 into $s0
+	move	$s1, $a2	# put $a2 into $s1
+	move	$s2, $a0	# put $a0 into $s2
+	lw	$a0, 4($s0)	# $a0=A[1]
+	lw	$a1, 8($s1)	# $a1=B[2]
+	lw	$a2, 8($s0)	# $a2=A[2]
+	lw	$a3, 4($s1)	# $a3=B[1]
+	jal	det		# det($a0, $a1, $a2, $a3);
+
+	sw	$v0, ($s2)	# n[0]=$v0
+	lw	$a0, 8($s0)	# $a0=A[2]
+	lw	$a1, ($s1)	# $a1=B[0]
+	lw	$a2, ($s0)	# $a2=A[0]
+	lw	$a3, 8($s1)	# $a3=B[2]
+	jal	det		# det($a0, $a1, $a2, $a3);
+
+	sw	$v0, 4($s2)	# n[1]=$v0
+	lw	$a0, ($s0)	# $a0=A[0]
+	lw	$a1, 4($s1)	# $a1=B[1]
+	lw	$a2, 4($s0)	# $a2=A[1]
+	lw	$a3, ($s1)	# $a3=B[0]
+	jal	det		# det($a0, $a1, $a2, $a3);
+
+	sw	$v0, 8($s2)	# n[2]=$v0	
+	lw	$ra, ($sp)	# restore $ra
+	lw	$s0, 4($sp)	# restore #s0
+	lw	$s1, 8($sp)	# restore $s1
+	lw	$s2, 12($sp)	# restore $s2
+	addi	$sp, $sp, 16	# put stack pointer back
+	jr	$ra		# return;
+
+#=================================================
+# int det(int w, int x, int y, int z)
+#
+# return the result of x*x-y*z
+#=================================================
+
+det:	mul	$a0, $a0, $a1	# w=w*x
+	mul	$a2, $a2, $a3	# y=y*z
+	sub	$v0, $a0, $a2	# return w-y
+	jr	$ra
+
+#=================================================
+# void dot(int &d, int A[], int B[])
+#
+# returns nothing. places answer in reference d
+#
+# register usage
+#	$t0	holds A[0], then A[0]*B[0], then that +$t1+$t2
+#	$t1	holds A[1], then A[1]*B[1]
+#	$t2	holds A[2], then A[2]*B[2]
+#=================================================
+
+dot:	lw	$t0, ($a1)	# $t0=A[0]
+	lw	$t1, ($a2)	# $t1=B[0]
+	mul	$t0, $t0, $t1	# $t0=$t0*$t1
+	lw	$t1, 4($a1)	# $t1=A[1]
+	lw	$t2, 4($a2)	# $t2=B[1]
+	mul	$t1, $t1, $t2	# $t1=$t1*$t2
+	lw	$t2, 8($a1)	# $t2=A[2]
+	lw	$t3, 8($a2)	# $t3=B[2]
+	mul	$t2, $t2, $t3	# $t2=$t2*$t3
+	add	$t0, $t0, $t1	# $t0=$t0+$t1
+	add	$t0, $t0, $t2	# $t0=$t0+$t1
+	sw	$t0, ($a0)	# d=$t0
+	jr	$ra		# return
+
+#=================================================
+# void readData (char c, int x[])
+#
+# returns nothing.
+#
+# register usage
+#	$t0	points to the x array
+#=================================================
+
+rdData:	move	$t0, $a1	# backup $a1 into $t0
+	beq	$a0, 'a', InA	# if $a0=='a' the goto InA
+	j	InB		# else goto InB
+
+InA:	la	$a0, A0		# Display "A0?" prompt
+	li	$v0, 4
+	syscall
+	li	$v0, 5		# read inputted integer
+	syscall
+	sw	$v0, ($t0)	# save input into x
+	addi	$t0, $t0, 4	# move the pointer to the next word
+
+	la	$a0, A1		# Display "A1?" prompt
+	li	$v0, 4	
+	syscall
+	li	$v0, 5		# read inputted integer
+	syscall
+	sw	$v0, ($t0)	# save input onto x
+	addi	$t0, $t0, 4	# move pointer to the next word
+	
+	la	$a0, A2		# Display "A2?" prompt
+	li	$v0, 4
+	syscall
+	li	$v0, 5		# read inputted integer
+	syscall
+	sw	$v0, ($t0)	# save input onto x
+	addi	$t0, $t0, 4	# move pointer to the next word
+	
+	j	endred		# done with A go to the end of function
+
+InB:	la	$a0, B0		# Display "B0?" prompt
+	li	$v0, 4
+	syscall
+	li	$v0, 5		# read inputted integer
+	syscall
+	sw	$v0, ($t0)	# save input onto x
+	addi	$t0, $t0, 4	# move pointer to the next word
+
+	la	$a0, B1		# Display "B1?" prompt
+	li	$v0, 4
+	syscall
+	li	$v0, 5		# read inputted integer
+	syscall
+	sw	$v0, ($t0)	# save input onto x
+	addi	$t0, $t0, 4	# move pointer to the next word
+
+	la	$a0, B2		# Display "B2?" prompt
+	li	$v0, 4
+	syscall
+	li	$v0, 5		# read inputted integer
+	syscall
+	sw	$v0, ($t0)	# save input into x
+
+endred:	jr	$ra		# return
+
+#=================================================
+# void PrintData(int d, int N[], int A[], int B[])
+#
+# returns nothing.
+#
+# register usage
+# 	$t0	saves $a0
+#=================================================
+
+PrntDt:	move	$t0, $a0	# $t0=$a0
+	la	$a0, endl	
+	li	$v0, 4
+	syscall			# print a new line
+
+	la	$a0, Aprpt
+	li	$v0, 4
+	syscall			# print the "A = (" message
+	lw	$a0, ($a2)
+	li	$v0, 1
+	syscall			# print A[0]
+	la	$a0, comma
+	li	$v0, 4
+	syscall			# print a comma
+	addi	$a2, $a2, 4	# next slot in array A
+	lw	$a0, ($a2)
+	li	$v0, 1
+	syscall			# print A[1]
+	la	$a0, comma
+	li	$v0, 4
+	syscall			# print another comma
+	addi	$a2, $a2, 4	# next array slot
+	lw	$a0, ($a2)	
+	li	$v0, 1
+	syscall			# print A[3]
+	la	$a0, rparen
+	li	$v0, 4
+	syscall			# print the right parethesis
+	
+	la	$a0, endl
+	li	$v0, 4
+	syscall			# print a new line
+
+	la	$a0, Bprpt	
+	li	$v0, 4
+	syscall			# print the "B = (" message
+	lw	$a0, ($a3)
+	li	$v0, 1
+	syscall			# print B[0]
+	la	$a0, comma
+	li	$v0, 4
+	syscall			# print a comma
+	addi	$a3, $a3, 4	# next slot in array B
+	lw	$a0, ($a3)
+	li	$v0, 1
+	syscall			# print B[1]
+	la	$a0, comma
+	li	$v0, 4
+	syscall			# print another comma
+	addi	$a3, $a3, 4	# next slot
+	lw	$a0, ($a3)
+	li	$v0, 1
+	syscall			# print B[2]
+	la	$a0, rparen
+	li	$v0, 4
+	syscall			# display the right parenthesis
+
+	la	$a0, endl
+	li	$v0, 4
+	syscall			# print a new line
+	syscall			# and another
+
+	la	$a0, Dprpt	
+	li	$v0, 4
+	syscall			# print the "A.B=" message
+	lw	$a0, ($t0)
+	li	$v0, 1
+	syscall			# print d
+	la	$a0, endl
+	li	$v0, 4
+	syscall			# print a new line
+
+	la	$a0, Cprpt
+	li	$v0, 4
+	syscall			# print the "AxB=" message
+	lw	$a0, ($a1)
+	li	$v0, 1
+	syscall			# print N[0]
+	la	$a0, comma
+	li	$v0, 4
+	syscall			# print a comma
+	addi	$a1, $a1, 4	# next array slot
+	lw	$a0, ($a1)
+	li	$v0, 1
+	syscall			# print N[1]
+	la	$a0, comma
+	li	$v0, 4
+	syscall			# print another comma
+	addi	$a1, $a1, 4	# next array slot
+	lw	$a0, ($a1)
+	li	$v0, 1
+	syscall			# print N[2]
+	la	$a0, rparen
+	li	$v0, 4
+	syscall			# print the right parenthesis
+	jr	$ra		# return
+
+end:
+#
+# cout << endl;
+# exit();
+#
+	la	$a0, endl
+	li	$v0, 4          # code 4 = print_string
+	syscall                 # cout << endl;
+
+        li      $v0, 10         # code 10 = exit
+        syscall                 # halt program
+
+
+##################################################
+#                                                #
+#                  data segment                  #
+#                                                #
+##################################################
+
+        .data
+info:	.asciiz	"Program 5: David Haltinner\n"	# program info
+endl:   .asciiz  "\n"          			# newline
+A0:	.asciiz	"A0? "				# A[0] prompt
+A1:	.asciiz	"A1? "				# A[1] prompt
+A2:	.asciiz	"A2? "				# A[2] prompt
+B0:	.asciiz	"B0? "				# B[0] prompt
+B1:	.asciiz	"B1? "				# B[1] prompt
+B2:	.asciiz	"B2? "				# B[2] prompt
+Aprpt:	.asciiz	"A = ("				# to display A array
+Bprpt:	.asciiz	"B = ("				# to display B array
+comma:	.asciiz	","				# a comma
+rparen:	.asciiz	")"				# right parenthesis
+Dprpt:	.asciiz	"A.B = "			# dot product formatting
+Cprpt:	.asciiz	"AxB = ("			# cross product formatting
+	.align	2				# make sure its a word boundry
+A:	.space 	12				# A array
+B:	.space	12				# B array
+N:	.space	12				# N array
+d:	.space	4				# dot product
